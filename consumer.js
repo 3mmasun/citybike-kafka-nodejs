@@ -3,7 +3,7 @@ var kafka = require("kafka-node"),
   client = new kafka.KafkaClient(),
   consumer = new Consumer(
     client,
-    [{ topic: "test", offset: 80, partition: 0 }],
+    [{ topic: "test", offset: 0, partition: 0 }],
     {
       autoCommit: false,
       fromOffset: true
