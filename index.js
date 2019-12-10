@@ -12,7 +12,14 @@ const getCityBikeInfo = () => {
   axios
     .get("https://api.citybik.es/v2/networks/citycycle")
     .then(function(response) {
-      console.log(JSON.stringify(response.data.network.stations[0]));
+      const station = response.data.network.stations[0];
+      console.log(JSON.stringify(station));
+      producer.send(
+        [{ topic: "test", messages: JSON.stringify(station), partition: 0 }],
+        function(err, data) {
+          console.log(data);
+        }
+      );
     })
     .catch(function(error) {
       console.log(error);
