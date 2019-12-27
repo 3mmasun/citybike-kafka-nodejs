@@ -2,20 +2,16 @@ const axios = require("axios");
 
 var kafka = require("kafka-node"),
   Producer = kafka.Producer,
-  KeyedMessage = kafka.KeyedMessage,
   client = new kafka.KafkaClient(),
-  producer = new Producer(client),
-  km = new KeyedMessage("key", "message"),
-  payloads = [{ topic: "test", messages: "hello", partition: 0 }];
+  producer = new Producer(client)
 
 const getCityBikeInfo = () => {
   axios
-    .get("https://api.citybik.es/v2/networks/citycycle")
+    .get("https://api.citybik.es/v2/networks/citi-bike-nyc")
     .then(function(response) {
-      const station = response.data.network.stations[0];
-      console.log(JSON.stringify(station));
+      console.log(JSON.stringify(response.data));
       producer.send(
-        [{ topic: "test", messages: JSON.stringify(station), partition: 0 }],
+        [{ topic: "citibike-nyc", messages: JSON.stringify(response.data), partition: 0 }],
         function(err, data) {
           console.log(data);
         }
@@ -26,4 +22,5 @@ const getCityBikeInfo = () => {
     });
 };
 
-setInterval(getCityBikeInfo, 5000);
+getCityBikeInfo()
+// setInterval(getCityBikeInfo, 5000);
